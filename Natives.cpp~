@@ -332,7 +332,7 @@ Datum Natives::vecSubNative(vector<Datum> args)
 		}
 		break;
 	default:
-		printf("_____ERORR_____ vecSubNative\n");
+		printf("_____ERORR_____ vecPruneNative\n");
 	}
 
 	return ret;

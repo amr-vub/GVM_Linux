@@ -78,7 +78,8 @@ public:
 	static Datum vecLengthNative(vector<Datum> args);
 	
 	// Returns a subset of an array
-	static Datum vecSubNative(vector<Datum> args);	
+	static Datum vecSubNative(vector<Datum> args)
+	)
 
 	/*	fields	*/
 	// global map as a table for native ops function pointers
