@@ -79,6 +79,12 @@ Datum Natives::equalsNative(vector<Datum> args)
 }
 
 
+Datum Natives::modNative(vector<Datum> args)
+{
+	return args[0] % args[1];
+}
+
+
 // returns an vector with range specified in the datum of the inputs
 Datum Natives::rangeNative(vector<Datum> args)
 {
@@ -350,6 +356,7 @@ map<string, MyFuncPtrType> Natives::generateMap()
 	temp["moreEq"] = &Natives::moreEqNative;
 	temp["less"] = &Natives::lessNative;
 	temp["int"] = &Natives::intNative;
+	temp["mod"] =  &Natives::modNative;
 	temp["range"] = &Natives::rangeNative;
 	temp["arrCat"] = &Natives::vecCatNative;
 	temp["arrPrune"] = &Natives::vecPruneNative;

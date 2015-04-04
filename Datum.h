@@ -49,6 +49,8 @@ public:
 	Datum operator>=(const Datum& b);
 	/*	<	*/
 	Datum operator<(const Datum& b);
+	/*	mod	*/
+	Datum operator%(const Datum& b);
 
 	// function to abstract types from the split instruction
 	//static vector<Datum> returnVectorOfDatums(Datum &dat);

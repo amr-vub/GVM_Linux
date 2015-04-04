@@ -51,6 +51,9 @@ public:
 	
 	// Return the true if the twi inputs are equal
 	static Datum equalsNative(vector<Datum> args);
+	
+	// Get the modules of the first parameter with respect to the 2nd parameter
+	static Datum modNative(vector<Datum> args);
 
 	// returns an vector with range specified in the datum of the inputs
 	static Datum rangeNative(vector<Datum> args);

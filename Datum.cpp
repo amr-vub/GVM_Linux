@@ -124,6 +124,27 @@ Datum Datum::operator/(const Datum& b)
 
 	return retrn;
 }
+
+
+/*	/	*/
+Datum Datum::operator%(const Datum& b)
+{
+	Datum retrn;
+	// setting the token type for the new created Datum
+	retrn.token_Type = this->token_Type;
+
+	switch(this->token_Type)
+	{
+	case INT:
+		retrn.iValue = this->iValue % b.iValue; 
+		break;	
+	default:
+		printf("_____ERORR_____ / \n");
+	}
+
+	return retrn;
+}
+
 /*	>	*/
 Datum Datum::operator>(const Datum& b)
 {

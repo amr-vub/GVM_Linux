@@ -79,6 +79,12 @@ Datum Natives::equalsNative(vector<Datum> args)
 }
 
 
+Datum Natives::modNative(vector<Datum> args)
+{
+	return args[0] % args[1];
+}
+
+
 // returns an vector with range specified in the datum of the inputs
 Datum Natives::rangeNative(vector<Datum> args)
 {
@@ -332,7 +338,7 @@ Datum Natives::vecSubNative(vector<Datum> args)
 		}
 		break;
 	default:
-		printf("_____ERORR_____ vecPruneNative\n");
+		printf("_____ERORR_____ vecSubNative\n");
 	}
 
 	return ret;
