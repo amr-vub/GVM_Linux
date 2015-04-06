@@ -126,7 +126,7 @@ Datum Datum::operator/(const Datum& b)
 }
 
 
-/*	/	*/
+/*	%	*/
 Datum Datum::operator%(const Datum& b)
 {
 	Datum retrn;

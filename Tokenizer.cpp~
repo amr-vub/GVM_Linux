@@ -72,8 +72,6 @@ void Tokenizer::wrapAndSend(Vector_Tuple &distList, Datum &res, Context &cx, sho
 			if(inst->isINDependant())
 			{
 				this->coreList[coreId]->insertToken_InIndInbox(newTok);	
-				if(inst->idx[1] == 1)
-				    inst->idx[1] = 1 ;
 			}
 			else
 			{
@@ -122,11 +120,11 @@ void Tokenizer::loadBalancer()
 	if(victim != -1)
 	{
 		//boost::lock_guard<boost::mutex> localGuard(this->core->ind_c_mutex);	
-		boost::lock_guard<boost::mutex> guard(this->coreList[victim]->ind_c_mutex);	
-		if(this->coreList[victim]->ind_Inbox.size() < THRESHOLD)
+		//boost::lock_guard<boost::mutex> guard(this->coreList[victim]->ind_c_mutex);	
+		if(this->coreList[victim]->get_ind_size() < THRESHOLD)
 			return;
 		//int victim_InboxSize = this->coreList[victim]->ind_Inbox.size();	
-		const int victim_InboxSize_const = this->coreList[victim]->ind_Inbox.size();				
+		const int victim_InboxSize_const = this->coreList[victim]->get_ind_size();				
 		// begin work stealing!!
 		// loop through the victim's inbox, and steal half of it
 		/**/									

@@ -24,14 +24,14 @@
 
 short globalNum_ips;
 
-short CORENUMBERS = 4;
+short CORENUMBERS=4;
 
 using namespace std;
 
 bool isLegalLine(string &line);
 void printResult(Token_Type* tok);
 
-int main(int argc, char* argv[])
+int _tmain(int argc, _TCHAR* argv[])
 {	
 	clock_t start;
     double duration;		
@@ -39,9 +39,10 @@ int main(int argc, char* argv[])
 	// open the instrucion file to parse
 	fstream instFile;
 	instFile.open(argv[1]);
-	if(argc >= 3)
-	  CORENUMBERS = atoi(argv[2]);
-	
+
+	if(argc==3)
+		CORENUMBERS = atoi((char* )argv[2]);
+
 	string line;
 
 	if(instFile.is_open())
@@ -77,13 +78,13 @@ int main(int argc, char* argv[])
 		vector<string> strToks;
 		getline(cin,input);
 		parser::Tokenize(input,strToks);
-		Tag * tag = new Tag(*firstCx, i, indxStrAdd, core->coreID);
-		if(strToks[0] == "[]")
+		Tag * tag = new Tag(*firstCx, i, indxStrAdd);
+				if(strToks[0]=="[]")
 		{
-		     	Datum datum = Datum();
-			datum.token_Type = Datum::I_VECTOR;
+			Datum datum = Datum();
+			datum.token_Type = Datum::I_VECTOR;					
 			Token_Type *tok = new Token_Type(datum, tag);
-			core->inbox.push_back(tok);  
+			core->inbox.push_back(tok);
 		}
 		else if(strToks.size() == 1)
 		{			
@@ -91,13 +92,13 @@ int main(int argc, char* argv[])
 			datum.token_Type = Datum::INT;
 			Token_Type *tok = new Token_Type(datum, tag);
 			core->inbox.push_back(tok);
-		}		
+		}
 		else if(strToks.size() > 1)
 		{
 			Datum datum = Datum();
 			datum.token_Type = Datum::I_VECTOR;
 			for (int i = 0; i < strToks.size(); i++)
-			{2
+			{
 				datum.iValue_v.push_back(atoi(strToks[i].c_str()));
 			}						
 			Token_Type *tok = new Token_Type(datum, tag);
@@ -117,19 +118,15 @@ int main(int argc, char* argv[])
 	{
 		coreList[i]->stop();
 		cout << "Core " << i << " is "<<coreList[i]->Idle_Counter << endl;
-		cout << "Core " << i << " dependant_count is "<<coreList[i]->dependant_count << endl;
-		cout << "Core " << i << " independant_count is "<<coreList[i]->independant_count << endl;
-		cout << "Core " << i << " was active "<<coreList[i]->StartUp_Done << endl;
 	}	
 	duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
-	std::cout<<"Total time: "<< duration <<'\n';
+    std::cout<<"Total time: "<< duration <<'\n';
 
 	// when it returns from start, the token that resides in the inbox
 	// will be the program result
-	Token_Type *tok = core->inbox.front();	
-	if(argc >= 4)
-	  if(*argv[3] == 'T')
-	      printResult(tok);
+	Token_Type *tok = core->inbox.front();
+	cout<< "the result is : \n";
+	printResult(tok);
 	//core->inbox.();
 
 	// freeing memory
@@ -142,7 +139,6 @@ int main(int argc, char* argv[])
 // function to print the result
 void printResult(Token_Type* tok)
 {
-        cout<< "the result is : \n";
 	switch (tok->data.token_Type)
 	{
 	case Datum::I_VECTOR:
@@ -154,11 +150,11 @@ void printResult(Token_Type* tok)
 				if(i + 1 != tok->data.iValue_v.size())
 					cout<< ", " ;
 			}
-			cout<< "]"<<endl;
+			cout<< "]";
 		}
 		break;
 	default:
-		cout<< tok->data.iValue<<endl;
+		cout<< tok->data.iValue;
 	}
 }
 

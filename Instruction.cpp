@@ -82,17 +82,21 @@ Operation::Operation(string &opCode, short &input,
 	this->inputs = input;
 	this->opCode = opCode;
 	this->tokenInputs = input;
-}
-/*
+}/*
 preparing the args list
 */
-vector<Datum> Operation::createArgsList(Token_Type** toks)
+vector<Datum> Operation::createArgsList(Token_Type** toks, short ips)
 {
-	vector<Datum> retArgs;
+	vector<Datum> retArgs;	
 	if(this->literals.empty())
 		// means that this op inst expect no literals
-			for(int i=0; i<this->inputs;i++)
-				retArgs.push_back(toks[i]->data);
+			if(this->inputs == 0)
+				// means that it was an array op
+				for(int i=0; i<ips;i++)
+					retArgs.push_back(toks[i]->data);
+			else
+				for(int i=0; i<this->inputs;i++)
+					retArgs.push_back(toks[i]->data);
 	else
 	{		
 		// this inst has literal inputs
@@ -122,6 +126,7 @@ vector<Datum> Operation::createArgsList(Token_Type** toks)
 
 }
 
+
 /*
 add literals to the op instruction and decrment the no of expected tokens
 */
@@ -135,10 +140,17 @@ void Operation::execute(Token_Type **tokens, Core *core)
 {
 	// get the conceret function to be implemented based on the opcode of this objs
 	MyFuncPtrType op_func_pointer = Natives::opcodes_pointers[this->opCode];
-
 	Datum res;
+	short ips = 0;
+	if(this->opCode == "array")
+	{
+		unordered_map<unsigned long long, short>::iterator tokenIt = 
+			core->matchUnit.arrayInputsStore.find(tokens[0][0].tag->tokenID);
+		ips = tokenIt->second;
+		core->matchUnit.arrayInputsStore.erase(tokenIt);
+	}
 	// prepare the args
-	vector<Datum> args = createArgsList(tokens);
+	vector<Datum> args = createArgsList(tokens, ips);
 	// calling the function with the input arguments
 	res = (*op_func_pointer)(args);
 
@@ -454,12 +466,24 @@ void Split::execute(Token_Type **tokens, Core *core)
 	default:
 		printf("_____ERORR_____ Split\n");
 	}
-	// update the array operation, i.e. the merge instruction, with the size
+// update the array operation, i.e. the merge instruction, with the size
 	// of the splited array as it's new input
-	Operation *op = (Operation*) IMemory::get(mergeDest);
-	op->tokenInputs = portIdx;
-	op->inputs = portIdx;
-	IMemory::put(mergeDest[0], mergeDest[1], op);
+	Token_Type** tokensArr;
+	tokensArr = new Token_Type*[portIdx];	
+	TokenTableValue savedTKstruct = {
+		savedTKstruct.inputs = portIdx,
+		savedTKstruct.Indx = 0,
+		savedTKstruct.tokenArr = tokensArr
+	};
+	//workaround to genrate the right token Id mix
+	tok->tag->instAdd[0] = mergeDest[0];
+	tok->tag->instAdd[1] = mergeDest[1];
+	tok->tag->generateUniqeInstIdx();
+	tok->tag->generateUniqeMix();
+	// then store it in the token table
+	core->matchUnit.tokenTable[tok->tag->tokenID] =	savedTKstruct;
+	// save also the number of expected inputs for thi array op
+	core->matchUnit.arrayInputsStore[tok->tag->tokenID] = portIdx;
 
 	// free memory
 	//delete [] tokens;
